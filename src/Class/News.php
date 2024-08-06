@@ -2,55 +2,122 @@
 
 namespace App\Class;
 
+/**
+ * Class News
+ *
+ * Represents a news article.
+ */
 class News
 {
-	protected $id, $title, $body, $createdAt;
+    /**
+     * @var int The news article ID.
+     */
+    protected $id;
 
-	public function setId($id)
-	{
-		$this->id = $id;
+    /**
+     * @var string The title of the news article.
+     */
+    protected $title;
 
-		return $this;
-	}
+    /**
+     * @var string The body content of the news article.
+     */
+    protected $body;
 
-	public function getId()
-	{
-		return $this->id;
-	}
+    /**
+     * @var string The date and time when the news article was created.
+     */
+    protected $createdAt;
 
-	public function setTitle($title)
-	{
-		$this->title = $title;
+    /**
+     * Set the news article ID.
+     *
+     * @param int $id
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function getTitle()
-	{
-		return $this->title;
-	}
+    /**
+     * Get the news article ID.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
-	public function setBody($body)
-	{
-		$this->body = $body;
+    /**
+     * Set the title of the news article.
+     *
+     * @param string $title
+     * @return $this
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function getBody()
-	{
-		return $this->body;
-	}
+    /**
+     * Get the title of the news article.
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
 
-	public function setCreatedAt($createdAt)
-	{
-		$this->createdAt = $createdAt;
+    /**
+     * Set the body content of the news article.
+     *
+     * @param string $body
+     * @return $this
+     */
+    public function setBody($body)
+    {
+        $this->body = $body;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function getCreatedAt()
-	{
-		return $this->createdAt;
-	}
+    /**
+     * Get the body content of the news article.
+     *
+     * @return string
+     */
+    public function getBody()
+    {
+        return $this->body;
+    }
+
+    /**
+     * Set the creation date and time of the news article.
+     *
+     * @param string $createdAt
+     * @return $this
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get the creation date and time of the news article.
+     *
+     * @return string
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
 }

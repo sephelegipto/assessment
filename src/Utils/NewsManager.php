@@ -5,15 +5,30 @@ namespace App\Utils;
 use App\Class\News;
 use PDOException;
 
+/**
+ * Class NewsManager
+ *
+ * Manages news articles and their associated comments.
+ */
 class NewsManager
 {
+    /**
+     * @var NewsManager|null Singleton instance of NewsManager.
+     */
     private static $instance = null;
 
+    /**
+     * Private constructor to prevent direct instantiation.
+     */
     private function __construct()
     {
-        // Autoloading through Composer makes manual includes unnecessary
     }
 
+    /**
+     * Get the singleton instance of NewsManager.
+     *
+     * @return NewsManager
+     */
     public static function getInstance()
     {
         if (null === self::$instance) {
@@ -24,7 +39,10 @@ class NewsManager
     }
 
     /**
-     * List all news
+     * List all news articles.
+     *
+     * @return News[]
+     * @throws PDOException If the query execution fails.
      */
     public function listNews()
     {
@@ -50,7 +68,12 @@ class NewsManager
     }
 
     /**
-     * Add a record in the news table
+     * Add a news article.
+     *
+     * @param string $title The title of the news article.
+     * @param string $body The body content of the news article.
+     * @return int The ID of the newly inserted news article.
+     * @throws PDOException If the insertion fails.
      */
     public function addNews($title, $body)
     {
@@ -67,7 +90,11 @@ class NewsManager
     }
 
     /**
-     * Deletes a news article and also linked comments
+     * Delete a news article and its linked comments.
+     *
+     * @param int $id The ID of the news article to delete.
+     * @return int The number of affected rows.
+     * @throws PDOException If the deletion fails.
      */
     public function deleteNews($id)
     {
