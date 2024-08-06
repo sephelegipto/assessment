@@ -44,3 +44,14 @@ Solution: Convert the procedural code into an object-oriented structure, using c
 Why it's bad: Omitting type declarations for method parameters and return types makes the code less readable and prone to type-related errors.
 Solution: Use type hints for method parameters and return types to improve clarity and enforce type safety.
 
+7. Inconsistent Naming Conventions:
+Why it's bad: Inconsistent naming conventions for variables and methods (e.g., $n for a News object) make the code less readable and harder to understand.
+Solution: Use descriptive and consistent naming conventions for variables and methods throughout the codebase.
+
+8. No Input Validation:
+Why it's bad: Without input validation, the application might accept invalid or malicious data, leading to potential security vulnerabilities and errors.
+Solution: Validate and sanitize all user inputs before processing them.
+
+9. SQL Injection Vulnerabilities:
+Why it's bad: Directly embedding user input into SQL queries makes the application vulnerable to SQL injection attacks, allowing attackers to execute arbitrary SQL code.
+Solution: Use prepared statements and parameter binding to safely handle user input in SQL queries.

@@ -53,7 +53,7 @@ class NewsManager
             $news = [];
             foreach ($rows as $row) {
                 $article = new News();
-                $news[] = $article->setId($row['id'])
+                $news[] = $article->setId((int) $row['id']) // Casting to ensure type safety
                     ->setTitle($row['title'])
                     ->setBody($row['body'])
                     ->setCreatedAt($row['created_at']);
@@ -76,6 +76,11 @@ class NewsManager
      */
     public function addNews(string $title, string $body): int
     {
+        // Input validation
+        if (empty($title) || empty($body)) {
+            throw new \InvalidArgumentException("Invalid news data.");
+        }
+
         $db = DB::getInstance();
         $sql = "INSERT INTO `news` (`title`, `body`, `created_at`) VALUES(:title, :body, :created_at)";
 
@@ -87,7 +92,7 @@ class NewsManager
                 ':created_at' => date('Y-m-d')
             ]);
 
-            return $db->lastInsertId();
+            return (int) $db->lastInsertId();
         } catch (PDOException $e) {
             // Handle insertion errors
             throw new PDOException("Failed to add news: " . $e->getMessage());
@@ -103,6 +108,11 @@ class NewsManager
      */
     public function deleteNews(int $id): int
     {
+        // Input validation
+        if ($id <= 0) {
+            throw new \InvalidArgumentException("Invalid news ID.");
+        }
+
         $comments = CommentManager::getInstance()->listComments();
         $idsToDelete = [];
 

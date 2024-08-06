@@ -53,10 +53,10 @@ class CommentManager
             $comments = [];
             foreach ($rows as $row) {
                 $comment = new Comment();
-                $comments[] = $comment->setId($row['id'])
+                $comments[] = $comment->setId((int) $row['id']) // Casting to ensure type safety
                     ->setBody($row['body'])
                     ->setCreatedAt($row['created_at'])
-                    ->setNewsId($row['news_id']);
+                    ->setNewsId((int) $row['news_id']); // Casting to ensure type safety
             }
 
             return $comments;
@@ -76,6 +76,11 @@ class CommentManager
      */
     public function addCommentForNews(string $body, int $newsId): int
     {
+        // Input validation
+        if (empty($body) || $newsId <= 0) {
+            throw new \InvalidArgumentException("Invalid comment data.");
+        }
+
         $db = DB::getInstance();
         $sql = "INSERT INTO `comment` (`body`, `created_at`, `news_id`) VALUES(:body, :created_at, :news_id)";
 
@@ -87,7 +92,7 @@ class CommentManager
                 ':news_id' => $newsId
             ]);
 
-            return $db->lastInsertId();
+            return (int) $db->lastInsertId();
         } catch (PDOException $e) {
             // Handle insertion errors
             throw new PDOException("Failed to add comment: " . $e->getMessage());
@@ -103,6 +108,11 @@ class CommentManager
      */
     public function deleteComment(int $id): int
     {
+        // Input validation
+        if ($id <= 0) {
+            throw new \InvalidArgumentException("Invalid comment ID.");
+        }
+
         $db = DB::getInstance();
         $sql = "DELETE FROM `comment` WHERE `id`=:id";
 
