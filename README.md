@@ -34,3 +34,8 @@ Solution: Use environment variables to store configuration settings, allowing fo
 4. Lack of Error Handling:
 Why it's bad: Without error handling, unexpected failures can crash the application, and diagnosing issues becomes difficult.
 Solution: Implement try-catch blocks around database operations to catch and handle exceptions gracefully.
+
+5. Lack of Object-Oriented Principles:
+
+Why it's bad: Procedural code does not leverage the benefits of OOP, such as encapsulation, abstraction, and inheritance, which can lead to harder-to-maintain code.
+Solution: Convert the procedural code into an object-oriented structure, using classes to encapsulate functionality and improve maintainability.
