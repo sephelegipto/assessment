@@ -63,9 +63,13 @@ class CommentManager
                     ->setNewsId((int) $row['news_id']); // Casting to ensure type safety
             }
 
+            // Log successful comment listing
+            Log::getLogger()->info("Listed comments for news ID $newsId.");
+
             return $comments;
         } catch (PDOException $e) {
-            // Handle query execution errors
+            // Log query execution errors
+            Log::getLogger()->error("Failed to list comments for news ID $newsId: " . $e->getMessage());
             throw new PDOException("Failed to list comments for news ID $newsId: " . $e->getMessage());
         }
     }
@@ -96,10 +100,16 @@ class CommentManager
                 ':news_id' => $newsId
             ]);
 
-            return (int) $db->lastInsertId();
+            $commentId = (int) $db->lastInsertId();
+
+            // Log successful comment addition
+            Log::getLogger()->info("Added comment ID $commentId for news ID $newsId.");
+
+            return $commentId;
         } catch (PDOException $e) {
-            // Handle insertion errors
-            throw new PDOException("Failed to add comment: " . $e->getMessage());
+            // Log insertion errors
+            Log::getLogger()->error("Failed to add comment for news ID $newsId: " . $e->getMessage());
+            throw new PDOException("Failed to add comment for news ID $newsId: " . $e->getMessage());
         }
     }
 
@@ -123,10 +133,16 @@ class CommentManager
         try {
             $stmt = $db->prepare($sql);
             $stmt->execute([':id' => $id]);
-            return $stmt->rowCount();
+            $affectedRows = $stmt->rowCount();
+
+            // Log successful comment deletion
+            Log::getLogger()->info("Deleted comment ID $id.");
+
+            return $affectedRows;
         } catch (PDOException $e) {
-            // Handle deletion errors
-            throw new PDOException("Failed to delete comment: " . $e->getMessage());
+            // Log deletion errors
+            Log::getLogger()->error("Failed to delete comment ID $id: " . $e->getMessage());
+            throw new PDOException("Failed to delete comment ID $id: " . $e->getMessage());
         }
     }
 }

@@ -43,8 +43,12 @@ class DB
             $this->pdo = new PDO($dsn, $user, $password);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+            // Log successful connection
+            Log::getLogger()->info("Database connection established.");
         } catch (PDOException $e) {
-            // Handle connection errors
+            // Log connection errors
+            Log::getLogger()->error("Database connection failed: " . $e->getMessage());
             throw new PDOException("Database connection failed: " . $e->getMessage());
         }
     }
@@ -73,9 +77,14 @@ class DB
     {
         try {
             $sth = $this->pdo->query($sql);
+
+            // Log the query
+            Log::getLogger()->info("Executed SELECT query: $sql");
+
             return $sth->fetchAll();
         } catch (PDOException $e) {
-            // Handle query execution errors
+            // Log query execution errors
+            Log::getLogger()->error("Query execution failed: " . $e->getMessage());
             throw new PDOException("Query execution failed: " . $e->getMessage());
         }
     }
@@ -90,9 +99,15 @@ class DB
     public function exec(string $sql): int
     {
         try {
-            return $this->pdo->exec($sql);
+            $result = $this->pdo->exec($sql);
+
+            // Log the executed statement
+            Log::getLogger()->info("Executed SQL statement: $sql");
+
+            return $result;
         } catch (PDOException $e) {
-            // Handle statement execution errors
+            // Log statement execution errors
+            Log::getLogger()->error("Statement execution failed: " . $e->getMessage());
             throw new PDOException("Statement execution failed: " . $e->getMessage());
         }
     }
@@ -117,9 +132,13 @@ class DB
     public function prepare(string $sql): \PDOStatement
     {
         try {
+            // Log the prepared statement
+            Log::getLogger()->info("Prepared SQL statement: $sql");
+
             return $this->pdo->prepare($sql);
         } catch (PDOException $e) {
-            // Handle preparation errors
+            // Log preparation errors
+            Log::getLogger()->error("Statement preparation failed: " . $e->getMessage());
             throw new PDOException("Statement preparation failed: " . $e->getMessage());
         }
     }
@@ -133,8 +152,12 @@ class DB
     {
         try {
             $this->pdo->beginTransaction();
+
+            // Log transaction start
+            Log::getLogger()->info("Transaction started.");
         } catch (PDOException $e) {
-            // Handle transaction errors
+            // Log transaction errors
+            Log::getLogger()->error("Transaction start failed: " . $e->getMessage());
             throw new PDOException("Transaction start failed: " . $e->getMessage());
         }
     }
@@ -148,8 +171,12 @@ class DB
     {
         try {
             $this->pdo->commit();
+
+            // Log transaction commit
+            Log::getLogger()->info("Transaction committed.");
         } catch (PDOException $e) {
-            // Handle transaction commit errors
+            // Log transaction commit errors
+            Log::getLogger()->error("Transaction commit failed: " . $e->getMessage());
             throw new PDOException("Transaction commit failed: " . $e->getMessage());
         }
     }
@@ -163,8 +190,12 @@ class DB
     {
         try {
             $this->pdo->rollBack();
+
+            // Log transaction rollback
+            Log::getLogger()->info("Transaction rolled back.");
         } catch (PDOException $e) {
-            // Handle transaction rollback errors
+            // Log transaction rollback errors
+            Log::getLogger()->error("Transaction rollback failed: " . $e->getMessage());
             throw new PDOException("Transaction rollback failed: " . $e->getMessage());
         }
     }

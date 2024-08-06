@@ -59,9 +59,13 @@ class NewsManager
                     ->setCreatedAt($row['created_at']);
             }
 
+            // Log successful news listing
+            Log::getLogger()->info("Listed news articles.");
+
             return $news;
         } catch (PDOException $e) {
-            // Handle query execution errors
+            // Log query execution errors
+            Log::getLogger()->error("Failed to list news: " . $e->getMessage());
             throw new PDOException("Failed to list news: " . $e->getMessage());
         }
     }
@@ -92,10 +96,16 @@ class NewsManager
                 ':created_at' => date('Y-m-d')
             ]);
 
-            return (int) $db->lastInsertId();
+            $newsId = (int) $db->lastInsertId();
+
+            // Log successful news addition
+            Log::getLogger()->info("Added news article ID $newsId.");
+
+            return $newsId;
         } catch (PDOException $e) {
-            // Handle insertion errors
-            throw new PDOException("Failed to add news: " . $e->getMessage());
+            // Log insertion errors
+            Log::getLogger()->error("Failed to add news article: " . $e->getMessage());
+            throw new PDOException("Failed to add news article: " . $e->getMessage());
         }
     }
 
@@ -128,15 +138,22 @@ class NewsManager
             $sql = "DELETE FROM `news` WHERE `id`=:id";
             $stmt = $db->prepare($sql);
             $stmt->execute([':id' => $id]);
+            $affectedRows = $stmt->rowCount();
 
             // Commit transaction
             $db->commit();
 
-            return $stmt->rowCount();
+            // Log successful news deletion
+            Log::getLogger()->info("Deleted news article ID $id and its linked comments.");
+
+            return $affectedRows;
         } catch (PDOException $e) {
             // Rollback transaction in case of error
             $db->rollBack();
-            throw new PDOException("Failed to delete news and its linked comments: " . $e->getMessage());
+
+            // Log deletion errors
+            Log::getLogger()->error("Failed to delete news article ID $id and its linked comments: " . $e->getMessage());
+            throw new PDOException("Failed to delete news article ID $id and its linked comments: " . $e->getMessage());
         }
     }
 }
