@@ -2,6 +2,11 @@
 
 namespace App\Utils;
 
+use Dotenv\Dotenv;
+
+$dotenv = Dotenv::createImmutable(dirname(dirname(__DIR__)));
+$dotenv->load();
+
 class DB
 {
 	private $pdo;
@@ -10,9 +15,9 @@ class DB
 
 	private function __construct()
 	{
-		$dsn = 'mysql:dbname=phptest;host=127.0.0.1';
-		$user = 'root';
-		$password = 'Password01';
+		$dsn = $_ENV['DB_DSN'];
+		$user = $_ENV['DB_USER'];
+		$password = $_ENV['DB_PASSWORD'];
 
 		$this->pdo = new \PDO($dsn, $user, $password);
 	}

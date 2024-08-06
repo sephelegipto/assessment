@@ -25,3 +25,8 @@ Solution: Use Composer's autoloading to manage class loading automatically.
 
 Why it's bad: Without namespaces, classes with the same name can conflict, especially in larger projects or when using third-party libraries.
 Solution: Use namespaces to organize code and avoid naming conflicts, making it easier to manage and scale the codebase.
+
+3. No Environment Variables:
+
+Why it's bad: Hardcoding configuration settings (e.g., database credentials) directly in the code makes it difficult to manage configurations across different environments and poses security risks.
+Solution: Use environment variables to store configuration settings, allowing for flexible management of different environments (e.g., development, testing, production) and enhancing security by keeping sensitive data out of the source code.
