@@ -2,12 +2,9 @@
 
 namespace App\Utils;
 
-use Dotenv\Dotenv;
 use PDO;
 use PDOException;
-
-$dotenv = Dotenv::createImmutable(dirname(dirname(__DIR__)));
-$dotenv->load();
+use Dotenv\Dotenv;
 
 /**
  * Class DB
@@ -35,6 +32,9 @@ class DB
      */
     private function __construct()
     {
+        $dotenv = Dotenv::createImmutable(dirname(dirname(__DIR__)));
+        $dotenv->load();
+
         $dsn = $_ENV['DB_DSN'];
         $user = $_ENV['DB_USER'];
         $password = $_ENV['DB_PASSWORD'];

@@ -8,6 +8,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use App\Utils\CommentManager;
 use App\Utils\NewsManager;
+use App\Utils\Log;
 use Exception;
 
 /**
@@ -49,20 +50,44 @@ class NewsDisplay
         try {
             $newsArticles = $this->newsManager->listNews();
 
+            if (empty($newsArticles)) {
+                echo "No news articles available.<br>";
+                return;
+            }
+
             foreach ($newsArticles as $news) {
-                echo("############ NEWS " . $news->getTitle() . " ############<br>");
-                echo($news->getBody() . "<br>");
-
-                // Fetch comments only for the specific news article
-                $comments = $this->commentManager->listCommentsForNews($news->getId());
-
-                foreach ($comments as $comment) {
-                    echo("Comment " . $comment->getId() . " : " . $comment->getBody() . "<br>");
-                }
+                $this->displaySingleNewsWithComments($news);
             }
         } catch (Exception $e) {
+            // Log the exception
+            Log::getLogger()->error("An error occurred while displaying news: " . $e->getMessage());
+
             // Handle exceptions and display a meaningful error message
             echo "An error occurred while displaying news: " . $e->getMessage();
+        }
+    }
+
+    /**
+     * Display a single news article with its associated comments.
+     *
+     * @param \App\Class\News $news
+     * @return void
+     */
+    private function displaySingleNewsWithComments($news): void
+    {
+        echo "############ NEWS " . htmlspecialchars($news->getTitle()) . " ############<br>";
+        echo htmlspecialchars($news->getBody()) . "<br>";
+
+        // Fetch comments only for the specific news article
+        $comments = $this->commentManager->listCommentsForNews($news->getId());
+
+        if (empty($comments)) {
+            echo "No comments available.<br>";
+            return;
+        }
+
+        foreach ($comments as $comment) {
+            echo "Comment " . $comment->getId() . " : " . htmlspecialchars($comment->getBody()) . "<br>";
         }
     }
 }

@@ -12,34 +12,37 @@ class News
     /**
      * @var int The news article ID.
      */
-    protected int $id;
+    private int $id;
 
     /**
      * @var string The title of the news article.
      */
-    protected string $title;
+    private string $title;
 
     /**
      * @var string The body content of the news article.
      */
-    protected string $body;
+    private string $body;
 
     /**
      * @var string The date and time when the news article was created.
      */
-    protected string $createdAt;
+    private string $createdAt;
 
     /**
-     * Set the news article ID.
+     * Constructor for the News class.
      *
-     * @param int $id
-     * @return $this
+     * @param int $id The news article ID.
+     * @param string $title The title of the news article.
+     * @param string $body The body content of the news article.
+     * @param string $createdAt The creation date and time of the news article.
      */
-    public function setId(int $id): self
+    public function __construct(int $id, string $title, string $body, string $createdAt)
     {
         $this->id = $id;
-
-        return $this;
+        $this->title = $title;
+        $this->body = $body;
+        $this->createdAt = $createdAt;
     }
 
     /**
@@ -53,19 +56,6 @@ class News
     }
 
     /**
-     * Set the title of the news article.
-     *
-     * @param string $title
-     * @return $this
-     */
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
      * Get the title of the news article.
      *
      * @return string
@@ -76,19 +66,6 @@ class News
     }
 
     /**
-     * Set the body content of the news article.
-     *
-     * @param string $body
-     * @return $this
-     */
-    public function setBody(string $body): self
-    {
-        $this->body = $body;
-
-        return $this;
-    }
-
-    /**
      * Get the body content of the news article.
      *
      * @return string
@@ -96,19 +73,6 @@ class News
     public function getBody(): string
     {
         return $this->body;
-    }
-
-    /**
-     * Set the creation date and time of the news article.
-     *
-     * @param string $createdAt
-     * @return $this
-     */
-    public function setCreatedAt(string $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
     }
 
     /**

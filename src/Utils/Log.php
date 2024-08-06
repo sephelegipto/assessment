@@ -5,6 +5,11 @@ namespace App\Utils;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
+/**
+ * Class Log
+ *
+ * Provides a singleton instance of the logger for application-wide use.
+ */
 class Log
 {
     /**

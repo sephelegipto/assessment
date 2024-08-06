@@ -2,7 +2,8 @@
 
 namespace App\Utils;
 
-use App\Class\News;
+use App\Repositories\Repository;
+use App\Classes\News;
 use PDOException;
 
 /**
@@ -17,11 +18,14 @@ class NewsManager
      */
     private static ?NewsManager $instance = null;
 
+    private Repository $repository;
+
     /**
      * Private constructor to prevent direct instantiation.
      */
     private function __construct()
     {
+        $this->repository = new Repository();
     }
 
     /**
@@ -45,29 +49,7 @@ class NewsManager
      */
     public function listNews(): array
     {
-        $db = DB::getInstance();
-
-        try {
-            $rows = $db->select('SELECT * FROM `news`');
-
-            $news = [];
-            foreach ($rows as $row) {
-                $article = new News();
-                $news[] = $article->setId((int) $row['id']) // Casting to ensure type safety
-                    ->setTitle($row['title'])
-                    ->setBody($row['body'])
-                    ->setCreatedAt($row['created_at']);
-            }
-
-            // Log successful news listing
-            Log::getLogger()->info("Listed news articles.");
-
-            return $news;
-        } catch (PDOException $e) {
-            // Log query execution errors
-            Log::getLogger()->error("Failed to list news: " . $e->getMessage());
-            throw new PDOException("Failed to list news: " . $e->getMessage());
-        }
+        return $this->repository->listNews();
     }
 
     /**
@@ -80,33 +62,11 @@ class NewsManager
      */
     public function addNews(string $title, string $body): int
     {
-        // Input validation
         if (empty($title) || empty($body)) {
             throw new \InvalidArgumentException("Invalid news data.");
         }
 
-        $db = DB::getInstance();
-        $sql = "INSERT INTO `news` (`title`, `body`, `created_at`) VALUES(:title, :body, :created_at)";
-
-        try {
-            $stmt = $db->prepare($sql);
-            $stmt->execute([
-                ':title' => $title,
-                ':body' => $body,
-                ':created_at' => date('Y-m-d')
-            ]);
-
-            $newsId = (int) $db->lastInsertId();
-
-            // Log successful news addition
-            Log::getLogger()->info("Added news article ID $newsId.");
-
-            return $newsId;
-        } catch (PDOException $e) {
-            // Log insertion errors
-            Log::getLogger()->error("Failed to add news article: " . $e->getMessage());
-            throw new PDOException("Failed to add news article: " . $e->getMessage());
-        }
+        return $this->repository->addNews($title, $body);
     }
 
     /**
@@ -118,42 +78,10 @@ class NewsManager
      */
     public function deleteNews(int $id): int
     {
-        // Input validation
         if ($id <= 0) {
             throw new \InvalidArgumentException("Invalid news ID.");
         }
 
-        $db = DB::getInstance();
-
-        try {
-            // Begin transaction
-            $db->beginTransaction();
-
-            // Fetch and delete comments only for the specific news article
-            $comments = CommentManager::getInstance()->listCommentsForNews($id);
-            foreach ($comments as $comment) {
-                CommentManager::getInstance()->deleteComment($comment->getId());
-            }
-
-            $sql = "DELETE FROM `news` WHERE `id`=:id";
-            $stmt = $db->prepare($sql);
-            $stmt->execute([':id' => $id]);
-            $affectedRows = $stmt->rowCount();
-
-            // Commit transaction
-            $db->commit();
-
-            // Log successful news deletion
-            Log::getLogger()->info("Deleted news article ID $id and its linked comments.");
-
-            return $affectedRows;
-        } catch (PDOException $e) {
-            // Rollback transaction in case of error
-            $db->rollBack();
-
-            // Log deletion errors
-            Log::getLogger()->error("Failed to delete news article ID $id and its linked comments: " . $e->getMessage());
-            throw new PDOException("Failed to delete news article ID $id and its linked comments: " . $e->getMessage());
-        }
+        return $this->repository->deleteNews($id);
     }
 }
