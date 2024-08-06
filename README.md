@@ -15,7 +15,7 @@ This simple application works, but with very old-style monolithic codebase, so d
   - more maintainable
 
 
-Bad Practices Identified:
+## 2. Bad Practices Identified
 1. Use of require_once for Class Loading:
 
 Why it's bad: Manually including files with require_once leads to boilerplate code and can result in maintenance challenges as the codebase grows.
