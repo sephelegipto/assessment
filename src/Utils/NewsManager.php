@@ -1,14 +1,16 @@
 <?php
 
+namespace App\Utils;
+
+use App\Class\News;
+
 class NewsManager
 {
 	private static $instance = null;
 
 	private function __construct()
 	{
-		require_once(ROOT . '/utils/DB.php');
-		require_once(ROOT . '/utils/CommentManager.php');
-		require_once(ROOT . '/class/News.php');
+	
 	}
 
 	public static function getInstance()
@@ -30,13 +32,14 @@ class NewsManager
 
 		$news = [];
 		foreach($rows as $row) {
+			
 			$n = new News();
 			$news[] = $n->setId($row['id'])
 			  ->setTitle($row['title'])
 			  ->setBody($row['body'])
 			  ->setCreatedAt($row['created_at']);
 		}
-
+		
 		return $news;
 	}
 

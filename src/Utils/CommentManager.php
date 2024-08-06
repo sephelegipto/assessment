@@ -1,13 +1,16 @@
 <?php
 
+namespace App\Utils;
+
+use App\Class\Comment;
+
 class CommentManager
 {
 	private static $instance = null;
 
 	private function __construct()
 	{
-		require_once(ROOT . '/utils/DB.php');
-		require_once(ROOT . '/class/Comment.php');
+		
 	}
 
 	public static function getInstance()
@@ -35,7 +38,7 @@ class CommentManager
 
 		return $comments;
 	}
-
+	
 	public function addCommentForNews($body, $newsId)
 	{
 		$db = DB::getInstance();

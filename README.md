@@ -13,3 +13,15 @@ This simple application works, but with very old-style monolithic codebase, so d
 
   - easier to work with
   - more maintainable
+
+
+Bad Practices Identified:
+1. Use of require_once for Class Loading:
+
+Why it's bad: Manually including files with require_once leads to boilerplate code and can result in maintenance challenges as the codebase grows.
+Solution: Use Composer's autoloading to manage class loading automatically.
+
+2. No Namespaces:
+
+Why it's bad: Without namespaces, classes with the same name can conflict, especially in larger projects or when using third-party libraries.
+Solution: Use namespaces to organize code and avoid naming conflicts, making it easier to manage and scale the codebase.

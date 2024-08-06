@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Class;
+
 class News
 {
 	protected $id, $title, $body, $createdAt;
