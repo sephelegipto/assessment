@@ -48,16 +48,16 @@ class NewsDisplay
     {
         try {
             $newsArticles = $this->newsManager->listNews();
-            $comments = $this->commentManager->listComments();
 
             foreach ($newsArticles as $news) {
                 echo("############ NEWS " . $news->getTitle() . " ############<br>");
                 echo($news->getBody() . "<br>");
 
+                // Fetch comments only for the specific news article
+                $comments = $this->commentManager->listCommentsForNews($news->getId());
+
                 foreach ($comments as $comment) {
-                    if ($comment->getNewsId() == $news->getId()) {
-                        echo("Comment " . $comment->getId() . " : " . $comment->getBody() . "<br>");
-                    }
+                    echo("Comment " . $comment->getId() . " : " . $comment->getBody() . "<br>");
                 }
             }
         } catch (Exception $e) {

@@ -38,17 +38,21 @@ class CommentManager
     }
 
     /**
-     * List all comments.
+     * List all comments for a specific news article.
      *
+     * @param int $newsId The ID of the news article.
      * @return Comment[]
      * @throws PDOException If the query execution fails.
      */
-    public function listComments(): array
+    public function listCommentsForNews(int $newsId): array
     {
         $db = DB::getInstance();
 
         try {
-            $rows = $db->select('SELECT * FROM `comment`');
+            // Fetch comments only for the specific news article
+            $stmt = $db->prepare('SELECT * FROM `comment` WHERE `news_id` = :news_id');
+            $stmt->execute([':news_id' => $newsId]);
+            $rows = $stmt->fetchAll();
 
             $comments = [];
             foreach ($rows as $row) {
@@ -62,7 +66,7 @@ class CommentManager
             return $comments;
         } catch (PDOException $e) {
             // Handle query execution errors
-            throw new PDOException("Failed to list comments: " . $e->getMessage());
+            throw new PDOException("Failed to list comments for news ID $newsId: " . $e->getMessage());
         }
     }
 

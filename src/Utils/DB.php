@@ -123,4 +123,49 @@ class DB
             throw new PDOException("Statement preparation failed: " . $e->getMessage());
         }
     }
+
+    /**
+     * Begin a transaction.
+     *
+     * @throws PDOException If the transaction start fails.
+     */
+    public function beginTransaction(): void
+    {
+        try {
+            $this->pdo->beginTransaction();
+        } catch (PDOException $e) {
+            // Handle transaction errors
+            throw new PDOException("Transaction start failed: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Commit a transaction.
+     *
+     * @throws PDOException If the transaction commit fails.
+     */
+    public function commit(): void
+    {
+        try {
+            $this->pdo->commit();
+        } catch (PDOException $e) {
+            // Handle transaction commit errors
+            throw new PDOException("Transaction commit failed: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Rollback a transaction.
+     *
+     * @throws PDOException If the transaction rollback fails.
+     */
+    public function rollBack(): void
+    {
+        try {
+            $this->pdo->rollBack();
+        } catch (PDOException $e) {
+            // Handle transaction rollback errors
+            throw new PDOException("Transaction rollback failed: " . $e->getMessage());
+        }
+    }
 }

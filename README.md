@@ -55,3 +55,11 @@ Solution: Validate and sanitize all user inputs before processing them.
 9. SQL Injection Vulnerabilities:
 Why it's bad: Directly embedding user input into SQL queries makes the application vulnerable to SQL injection attacks, allowing attackers to execute arbitrary SQL code.
 Solution: Use prepared statements and parameter binding to safely handle user input in SQL queries.
+
+10. No Transaction Management for Multi-step Database Operations:
+Why it's bad: Multi-step database operations (like deleting news and its associated comments) should be handled within transactions to ensure data integrity.
+Solution: Use transactions to ensure that a sequence of operations is executed completely or not at all.
+
+11. Inefficient Data Retrieval and Processing:
+Why it's bad: The listComments method retrieves all comments and filters them in PHP, leading to unnecessary data processing and inefficiencies.
+Solution: Use optimized SQL queries to fetch only the relevant data from the database.

@@ -113,29 +113,29 @@ class NewsManager
             throw new \InvalidArgumentException("Invalid news ID.");
         }
 
-        $comments = CommentManager::getInstance()->listComments();
-        $idsToDelete = [];
-
-        foreach ($comments as $comment) {
-            if ($comment->getNewsId() === $id) {
-                $idsToDelete[] = $comment->getId();
-            }
-        }
+        $db = DB::getInstance();
 
         try {
-            foreach ($idsToDelete as $commentId) {
-                CommentManager::getInstance()->deleteComment($commentId);
+            // Begin transaction
+            $db->beginTransaction();
+
+            // Fetch and delete comments only for the specific news article
+            $comments = CommentManager::getInstance()->listCommentsForNews($id);
+            foreach ($comments as $comment) {
+                CommentManager::getInstance()->deleteComment($comment->getId());
             }
 
-            $db = DB::getInstance();
             $sql = "DELETE FROM `news` WHERE `id`=:id";
-
             $stmt = $db->prepare($sql);
             $stmt->execute([':id' => $id]);
 
+            // Commit transaction
+            $db->commit();
+
             return $stmt->rowCount();
         } catch (PDOException $e) {
-            // Handle deletion errors
+            // Rollback transaction in case of error
+            $db->rollBack();
             throw new PDOException("Failed to delete news and its linked comments: " . $e->getMessage());
         }
     }
