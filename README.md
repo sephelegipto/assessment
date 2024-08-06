@@ -30,3 +30,7 @@ Solution: Use namespaces to organize code and avoid naming conflicts, making it 
 
 Why it's bad: Hardcoding configuration settings (e.g., database credentials) directly in the code makes it difficult to manage configurations across different environments and poses security risks.
 Solution: Use environment variables to store configuration settings, allowing for flexible management of different environments (e.g., development, testing, production) and enhancing security by keeping sensitive data out of the source code.
+
+4. Lack of Error Handling:
+Why it's bad: Without error handling, unexpected failures can crash the application, and diagnosing issues becomes difficult.
+Solution: Implement try-catch blocks around database operations to catch and handle exceptions gracefully.
