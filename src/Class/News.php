@@ -12,22 +12,22 @@ class News
     /**
      * @var int The news article ID.
      */
-    protected $id;
+    protected int $id;
 
     /**
      * @var string The title of the news article.
      */
-    protected $title;
+    protected string $title;
 
     /**
      * @var string The body content of the news article.
      */
-    protected $body;
+    protected string $body;
 
     /**
      * @var string The date and time when the news article was created.
      */
-    protected $createdAt;
+    protected string $createdAt;
 
     /**
      * Set the news article ID.
@@ -35,7 +35,7 @@ class News
      * @param int $id
      * @return $this
      */
-    public function setId($id)
+    public function setId(int $id): self
     {
         $this->id = $id;
 
@@ -47,7 +47,7 @@ class News
      *
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -58,7 +58,7 @@ class News
      * @param string $title
      * @return $this
      */
-    public function setTitle($title)
+    public function setTitle(string $title): self
     {
         $this->title = $title;
 
@@ -70,7 +70,7 @@ class News
      *
      * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -81,7 +81,7 @@ class News
      * @param string $body
      * @return $this
      */
-    public function setBody($body)
+    public function setBody(string $body): self
     {
         $this->body = $body;
 
@@ -93,7 +93,7 @@ class News
      *
      * @return string
      */
-    public function getBody()
+    public function getBody(): string
     {
         return $this->body;
     }
@@ -104,7 +104,7 @@ class News
      * @param string $createdAt
      * @return $this
      */
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt(string $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -116,7 +116,7 @@ class News
      *
      * @return string
      */
-    public function getCreatedAt()
+    public function getCreatedAt(): string
     {
         return $this->createdAt;
     }

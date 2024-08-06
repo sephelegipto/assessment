@@ -15,7 +15,7 @@ class CommentManager
     /**
      * @var CommentManager|null Singleton instance of CommentManager.
      */
-    private static $instance = null;
+    private static ?CommentManager $instance = null;
 
     /**
      * Private constructor to prevent direct instantiation.
@@ -29,11 +29,10 @@ class CommentManager
      *
      * @return CommentManager
      */
-    public static function getInstance()
+    public static function getInstance(): CommentManager
     {
-        if (null === self::$instance) {
-            $c = __CLASS__;
-            self::$instance = new $c;
+        if (self::$instance === null) {
+            self::$instance = new self();
         }
         return self::$instance;
     }
@@ -44,7 +43,7 @@ class CommentManager
      * @return Comment[]
      * @throws PDOException If the query execution fails.
      */
-    public function listComments()
+    public function listComments(): array
     {
         $db = DB::getInstance();
 
@@ -53,8 +52,8 @@ class CommentManager
 
             $comments = [];
             foreach ($rows as $row) {
-                $n = new Comment();
-                $comments[] = $n->setId($row['id'])
+                $comment = new Comment();
+                $comments[] = $comment->setId($row['id'])
                     ->setBody($row['body'])
                     ->setCreatedAt($row['created_at'])
                     ->setNewsId($row['news_id']);
@@ -75,14 +74,20 @@ class CommentManager
      * @return int The ID of the newly inserted comment.
      * @throws PDOException If the insertion fails.
      */
-    public function addCommentForNews($body, $newsId)
+    public function addCommentForNews(string $body, int $newsId): int
     {
         $db = DB::getInstance();
-        $sql = "INSERT INTO `comment` (`body`, `created_at`, `news_id`) VALUES('" . $body . "','" . date('Y-m-d') . "','" . $newsId . "')";
+        $sql = "INSERT INTO `comment` (`body`, `created_at`, `news_id`) VALUES(:body, :created_at, :news_id)";
 
         try {
-            $db->exec($sql);
-            return $db->lastInsertId($sql);
+            $stmt = $db->prepare($sql);
+            $stmt->execute([
+                ':body' => $body,
+                ':created_at' => date('Y-m-d'),
+                ':news_id' => $newsId
+            ]);
+
+            return $db->lastInsertId();
         } catch (PDOException $e) {
             // Handle insertion errors
             throw new PDOException("Failed to add comment: " . $e->getMessage());
@@ -96,13 +101,15 @@ class CommentManager
      * @return int The number of affected rows.
      * @throws PDOException If the deletion fails.
      */
-    public function deleteComment($id)
+    public function deleteComment(int $id): int
     {
         $db = DB::getInstance();
-        $sql = "DELETE FROM `comment` WHERE `id`=" . $id;
+        $sql = "DELETE FROM `comment` WHERE `id`=:id";
 
         try {
-            return $db->exec($sql);
+            $stmt = $db->prepare($sql);
+            $stmt->execute([':id' => $id]);
+            return $stmt->rowCount();
         } catch (PDOException $e) {
             // Handle deletion errors
             throw new PDOException("Failed to delete comment: " . $e->getMessage());

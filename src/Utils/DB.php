@@ -19,12 +19,12 @@ class DB
     /**
      * @var PDO The PDO instance for database connection.
      */
-    private $pdo;
+    private PDO $pdo;
 
     /**
      * @var DB|null Singleton instance of DB.
      */
-    private static $instance = null;
+    private static ?DB $instance = null;
 
     /**
      * Private constructor to prevent direct instantiation.
@@ -54,11 +54,10 @@ class DB
      *
      * @return DB
      */
-    public static function getInstance()
+    public static function getInstance(): DB
     {
-        if (null === self::$instance) {
-            $c = __CLASS__;
-            self::$instance = new $c;
+        if (self::$instance === null) {
+            self::$instance = new self();
         }
         return self::$instance;
     }
@@ -70,7 +69,7 @@ class DB
      * @return array The result set as an array.
      * @throws PDOException If the query execution fails.
      */
-    public function select($sql)
+    public function select(string $sql): array
     {
         try {
             $sth = $this->pdo->query($sql);
@@ -88,7 +87,7 @@ class DB
      * @return int The number of affected rows.
      * @throws PDOException If the statement execution fails.
      */
-    public function exec($sql)
+    public function exec(string $sql): int
     {
         try {
             return $this->pdo->exec($sql);
@@ -103,8 +102,25 @@ class DB
      *
      * @return string The last insert ID.
      */
-    public function lastInsertId()
+    public function lastInsertId(): string
     {
         return $this->pdo->lastInsertId();
+    }
+
+    /**
+     * Prepare a SQL statement for execution.
+     *
+     * @param string $sql The SQL query to prepare.
+     * @return \PDOStatement The prepared statement.
+     * @throws PDOException If preparation fails.
+     */
+    public function prepare(string $sql): \PDOStatement
+    {
+        try {
+            return $this->pdo->prepare($sql);
+        } catch (PDOException $e) {
+            // Handle preparation errors
+            throw new PDOException("Statement preparation failed: " . $e->getMessage());
+        }
     }
 }

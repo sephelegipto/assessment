@@ -15,7 +15,7 @@ class NewsManager
     /**
      * @var NewsManager|null Singleton instance of NewsManager.
      */
-    private static $instance = null;
+    private static ?NewsManager $instance = null;
 
     /**
      * Private constructor to prevent direct instantiation.
@@ -29,11 +29,10 @@ class NewsManager
      *
      * @return NewsManager
      */
-    public static function getInstance()
+    public static function getInstance(): NewsManager
     {
-        if (null === self::$instance) {
-            $c = __CLASS__;
-            self::$instance = new $c;
+        if (self::$instance === null) {
+            self::$instance = new self();
         }
         return self::$instance;
     }
@@ -44,7 +43,7 @@ class NewsManager
      * @return News[]
      * @throws PDOException If the query execution fails.
      */
-    public function listNews()
+    public function listNews(): array
     {
         $db = DB::getInstance();
 
@@ -53,8 +52,8 @@ class NewsManager
 
             $news = [];
             foreach ($rows as $row) {
-                $n = new News();
-                $news[] = $n->setId($row['id'])
+                $article = new News();
+                $news[] = $article->setId($row['id'])
                     ->setTitle($row['title'])
                     ->setBody($row['body'])
                     ->setCreatedAt($row['created_at']);
@@ -75,14 +74,20 @@ class NewsManager
      * @return int The ID of the newly inserted news article.
      * @throws PDOException If the insertion fails.
      */
-    public function addNews($title, $body)
+    public function addNews(string $title, string $body): int
     {
         $db = DB::getInstance();
-        $sql = "INSERT INTO `news` (`title`, `body`, `created_at`) VALUES('" . $title . "','" . $body . "','" . date('Y-m-d') . "')";
+        $sql = "INSERT INTO `news` (`title`, `body`, `created_at`) VALUES(:title, :body, :created_at)";
 
         try {
-            $db->exec($sql);
-            return $db->lastInsertId($sql);
+            $stmt = $db->prepare($sql);
+            $stmt->execute([
+                ':title' => $title,
+                ':body' => $body,
+                ':created_at' => date('Y-m-d')
+            ]);
+
+            return $db->lastInsertId();
         } catch (PDOException $e) {
             // Handle insertion errors
             throw new PDOException("Failed to add news: " . $e->getMessage());
@@ -96,26 +101,29 @@ class NewsManager
      * @return int The number of affected rows.
      * @throws PDOException If the deletion fails.
      */
-    public function deleteNews($id)
+    public function deleteNews(int $id): int
     {
         $comments = CommentManager::getInstance()->listComments();
         $idsToDelete = [];
 
         foreach ($comments as $comment) {
-            if ($comment->getNewsId() == $id) {
+            if ($comment->getNewsId() === $id) {
                 $idsToDelete[] = $comment->getId();
             }
         }
 
         try {
-            foreach ($idsToDelete as $id) {
-                CommentManager::getInstance()->deleteComment($id);
+            foreach ($idsToDelete as $commentId) {
+                CommentManager::getInstance()->deleteComment($commentId);
             }
 
             $db = DB::getInstance();
-            $sql = "DELETE FROM `news` WHERE `id`=" . $id;
+            $sql = "DELETE FROM `news` WHERE `id`=:id";
 
-            return $db->exec($sql);
+            $stmt = $db->prepare($sql);
+            $stmt->execute([':id' => $id]);
+
+            return $stmt->rowCount();
         } catch (PDOException $e) {
             // Handle deletion errors
             throw new PDOException("Failed to delete news and its linked comments: " . $e->getMessage());

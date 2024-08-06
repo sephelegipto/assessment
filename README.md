@@ -39,3 +39,8 @@ Solution: Implement try-catch blocks around database operations to catch and han
 
 Why it's bad: Procedural code does not leverage the benefits of OOP, such as encapsulation, abstraction, and inheritance, which can lead to harder-to-maintain code.
 Solution: Convert the procedural code into an object-oriented structure, using classes to encapsulate functionality and improve maintainability.
+
+6. Lack of Type Declarations:
+Why it's bad: Omitting type declarations for method parameters and return types makes the code less readable and prone to type-related errors.
+Solution: Use type hints for method parameters and return types to improve clarity and enforce type safety.
+

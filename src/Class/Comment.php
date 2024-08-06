@@ -12,22 +12,22 @@ class Comment
     /**
      * @var int The comment ID.
      */
-    protected $id;
+    protected int $id;
 
     /**
      * @var string The body of the comment.
      */
-    protected $body;
+    protected string $body;
 
     /**
      * @var string The date and time when the comment was created.
      */
-    protected $createdAt;
+    protected string $createdAt;
 
     /**
      * @var int The ID of the associated news article.
      */
-    protected $newsId;
+    protected int $newsId;
 
     /**
      * Set the comment ID.
@@ -35,7 +35,7 @@ class Comment
      * @param int $id
      * @return $this
      */
-    public function setId($id)
+    public function setId(int $id): self
     {
         $this->id = $id;
 
@@ -47,7 +47,7 @@ class Comment
      *
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -58,7 +58,7 @@ class Comment
      * @param string $body
      * @return $this
      */
-    public function setBody($body)
+    public function setBody(string $body): self
     {
         $this->body = $body;
 
@@ -70,7 +70,7 @@ class Comment
      *
      * @return string
      */
-    public function getBody()
+    public function getBody(): string
     {
         return $this->body;
     }
@@ -81,7 +81,7 @@ class Comment
      * @param string $createdAt
      * @return $this
      */
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt(string $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -93,7 +93,7 @@ class Comment
      *
      * @return string
      */
-    public function getCreatedAt()
+    public function getCreatedAt(): string
     {
         return $this->createdAt;
     }
@@ -104,7 +104,7 @@ class Comment
      * @param int $newsId
      * @return $this
      */
-    public function setNewsId($newsId)
+    public function setNewsId(int $newsId): self
     {
         $this->newsId = $newsId;
 
@@ -116,7 +116,7 @@ class Comment
      *
      * @return int
      */
-    public function getNewsId()
+    public function getNewsId(): int
     {
         return $this->newsId;
     }
